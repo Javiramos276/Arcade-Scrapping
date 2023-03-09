@@ -1,0 +1,37 @@
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup as bs
+import json
+
+numero = input("Dame un numero \n")
+
+url = "https://zenius-i-vanisher.com/v5.2/arcade.php?id="+numero+"#games"
+
+
+def scraper():
+    response = requests.get(url)
+    if response.status_code == 200:
+        print("El pedido se hizo con exito, aca tenes los resultados")
+    else:
+        print("No se pudo realizar tu pedido")
+
+    soup = bs(response.content, 'html.parser')
+    juegos = soup.find(id="arcade-games").find_all("strong")
+    print()
+    nombre_casa_de_juegos = soup.find("div", {"class": "headertop"}).find_all("h1")
+    direccion = soup.find("div", {"class": "middlepanel"}).find_all("p")
+    
+    print("La casa se llama de juegos se llama:",nombre_casa_de_juegos[0].string,"\n")
+    print("Los juegos son los siguientes: \n")
+    for i in range(len(juegos)):
+        print(juegos[i].string, "\n")
+
+    print("La dirección de la casa de juegos es: \n")
+    print(direccion[0].text)
+
+    
+
+    # condicion_juegos = soup.find(id="arcade-games").find_all("tr")
+    # print(condicion_juegos[4].string)
+
+scraper()
